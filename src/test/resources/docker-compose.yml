@@ -6,7 +6,7 @@ services:
     command:
       - /bin/bash
       - -c
-      - "opensearch-plugin install --batch file:///releases/zentity-${ZENTITY_VERSION}-opensearch-${OPENSEARCH_VERSION}.zip && opensearch"
+      - "/usr/share/opensearch/bin/opensearch-plugin install --batch file:///releases/zentity-${ZENTITY_VERSION}-opensearch-${OPENSEARCH_VERSION}.zip && /usr/share/opensearch/opensearch-docker-entrypoint.sh"
     environment:
       - node.name=es01
       - cluster.name=zentity-test-cluster
@@ -15,6 +15,7 @@ services:
       - http.port=9400
       - transport.tcp.port=9500
       - bootstrap.memory_lock=true
+      - plugins.security.disabled=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m -ea"
     ulimits:
       memlock:
@@ -33,7 +34,7 @@ services:
     command:
       - /bin/bash
       - -c
-      - "opensearch-plugin install --batch file:///releases/zentity-${ZENTITY_VERSION}-opensearch-${OPENSEARCH_VERSION}.zip && opensearch"
+      - "/usr/share/opensearch/bin/opensearch-plugin install --batch file:///releases/zentity-${ZENTITY_VERSION}-opensearch-${OPENSEARCH_VERSION}.zip && /usr/share/opensearch/opensearch-docker-entrypoint.sh"
     environment:
       - node.name=es02
       - cluster.name=zentity-test-cluster
@@ -42,6 +43,7 @@ services:
       - http.port=9400
       - transport.tcp.port=9500
       - bootstrap.memory_lock=true
+      - plugins.security.disabled=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m -ea"
     ulimits:
       memlock:
@@ -58,7 +60,7 @@ services:
     command:
       - /bin/bash
       - -c
-      - "opensearch-plugin install --batch file:///releases/zentity-${ZENTITY_VERSION}-opensearch-${OPENSEARCH_VERSION}.zip && opensearch"
+      - "/usr/share/opensearch/bin/opensearch-plugin install --batch file:///releases/zentity-${ZENTITY_VERSION}-opensearch-${OPENSEARCH_VERSION}.zip && /usr/share/opensearch/opensearch-docker-entrypoint.sh"
     environment:
       - node.name=es03
       - cluster.name=zentity-test-cluster
@@ -67,6 +69,7 @@ services:
       - http.port=9400
       - transport.tcp.port=9500
       - bootstrap.memory_lock=true
+      - plugins.security.disabled=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m -ea"
     ulimits:
       memlock:
