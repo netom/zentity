@@ -21,8 +21,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.zentity.common.Json;
 import io.zentity.common.Patterns;
-import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.common.Strings;
+import org.opensearch.OpenSearchException;
+import org.opensearch.common.Strings;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -79,12 +79,12 @@ public class Model {
 
     /**
      * Validate the name of an entity type, attribute, resolver, or matcher.
-     * The name requirements are the same as the Elasticsearch index name requirements.
+     * The name requirements are the same as the OpenSearch index name requirements.
      *
      * @param name  The name of the entity type, attribute, resolver, or matcher.
      * @return an optional ValidationException if the type is not in a valid format.
-     * @see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.10/indices-create-index.html#indices-create-api-path-params">Elasticsearch Index Name Requirements</a>
-     * @see org.elasticsearch.cluster.metadata.MetadataCreateIndexService#validateIndexOrAliasName
+     * @see <a href="#">OpenSearch Index Name Requirements</a>
+     * @see org.opensearch.cluster.metadata.MetadataCreateIndexService#validateIndexOrAliasName
      */
     public static void validateStrictName(String name) throws ValidationException {
         BiFunction<String, String, String> msg = (invalidName, description) -> "Invalid name [" + invalidName + "], " + description;
@@ -105,7 +105,7 @@ public class Model {
             byteCount = name.getBytes("UTF-8").length;
         } catch (UnsupportedEncodingException e) {
             // UTF-8 should always be supported, but rethrow this if it is not for some reason
-            throw new ElasticsearchException("Unable to determine length of name [" + name + "]", e);
+            throw new OpenSearchException("Unable to determine length of name [" + name + "]", e);
         }
         if (byteCount > MAX_STRICT_NAME_BYTES)
             throw new ValidationException(msg.apply(name, "name is too long, (" + byteCount + " > " + MAX_STRICT_NAME_BYTES + ")"));

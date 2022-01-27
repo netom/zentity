@@ -17,8 +17,8 @@
  */
 package io.zentity.common;
 
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.common.collect.Tuple;
+import org.opensearch.action.ActionListener;
+import org.opensearch.common.collect.Tuple;
 import org.junit.Test;
 
 import java.util.Collection;

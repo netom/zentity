@@ -15,20 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.elasticsearch.plugin.zentity;
+package org.opensearch.plugin.zentity;
 
-import org.elasticsearch.client.node.NodeClient;
-import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.rest.BaseRestHandler;
-import org.elasticsearch.rest.BytesRestResponse;
-import org.elasticsearch.rest.RestRequest;
-import org.elasticsearch.rest.RestStatus;
+import org.opensearch.client.node.NodeClient;
+import org.opensearch.common.xcontent.XContentBuilder;
+import org.opensearch.common.xcontent.XContentFactory;
+import org.opensearch.rest.BaseRestHandler;
+import org.opensearch.rest.BytesRestResponse;
+import org.opensearch.rest.RestRequest;
+import org.opensearch.rest.RestStatus;
 
 import java.util.List;
 import java.util.Properties;
 
-import static org.elasticsearch.rest.RestRequest.Method.GET;
+import static org.opensearch.rest.RestRequest.Method.GET;
 
 
 public class HomeAction extends BaseRestHandler {
@@ -61,7 +61,7 @@ public class HomeAction extends BaseRestHandler {
             content.field("website", props.getProperty("zentity.website"));
             content.startObject("version");
             content.field("zentity", props.getProperty("zentity.version"));
-            content.field("elasticsearch", props.getProperty("elasticsearch.version"));
+            content.field("opensearch", props.getProperty("opensearch.version"));
             content.endObject();
             content.endObject();
             channel.sendResponse(new BytesRestResponse(RestStatus.OK, content));

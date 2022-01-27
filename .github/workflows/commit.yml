@@ -1,4 +1,4 @@
-# Build and test zentity for each supported version of Elasticsearch whenever pushing a commit or submitting a pull request.
+# Build and test zentity for each supported version of OpenSearch whenever pushing a commit or submitting a pull request.
 name: Commit
 on:
   push:
@@ -21,23 +21,10 @@ jobs:
       # Attempt to run all tests.
       fail-fast: false
 
-      # Build and test zentity for each version of Elasticsearch that its APIs support.
+      # Build and test zentity for each version of OpenSearch that its APIs support.
       matrix:
-        elasticsearch:
-          - 7.11.2
-          - 7.11.1
-          #- 7.11.0 # Won't support: https://github.com/elastic/elasticsearch/issues/68889#issuecomment-780650094
-          - 7.10.2
-          - 7.10.1
-          - 7.10.0
-          - 7.9.3
-          - 7.9.2
-          - 7.9.1
-          - 7.9.0
-          - 7.8.1
-          - 7.8.0
-          - 7.7.1
-          - 7.7.0
+        opensearch:
+          - 1.2.4
 
     # Use the latest LTS OS.
     runs-on: ubuntu-20.04
@@ -51,7 +38,7 @@ jobs:
 
       # Configure the JDK.
       # Uses: https://github.com/actions/setup-java
-      # Elasticsearch JVM support matrix: https://www.elastic.co/support/matrix#matrix_jvm
+      # OpenSearch compatibility: https://opensearch.org/docs/latest/opensearch/install/compatibility/
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
@@ -66,8 +53,8 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      # Build and test zentity for a given version of Elasticsearch.
+      # Build and test zentity for a given version of OpenSearch.
       - name: Build and test
         env:
-          ELASTICSEARCH_VERSION: ${{ matrix.elasticsearch }}
-        run: mvn --batch-mode clean install "-Delasticsearch.version=$ELASTICSEARCH_VERSION" --file pom.xml
+          OPENSEARCH_VERSION: ${{ matrix.opensearch }}
+        run: mvn --batch-mode clean install "-Dopensearch.version=$OPENSEARCH_VERSION" --file pom.xml

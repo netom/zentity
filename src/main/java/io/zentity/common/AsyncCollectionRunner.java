@@ -17,7 +17,7 @@
  */
 package io.zentity.common;
 
-import org.elasticsearch.action.ActionListener;
+import org.opensearch.action.ActionListener;
 
 import java.util.Collection;
 import java.util.Deque;

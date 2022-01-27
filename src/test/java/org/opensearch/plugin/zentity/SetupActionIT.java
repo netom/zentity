@@ -15,13 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.elasticsearch.plugin.zentity;
+package org.opensearch.plugin.zentity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.zentity.common.Json;
-import org.elasticsearch.client.Request;
-import org.elasticsearch.client.Response;
-import org.elasticsearch.client.ResponseException;
+import org.opensearch.client.Request;
+import org.opensearch.client.Response;
+import org.opensearch.client.ResponseException;
+import org.opensearch.plugin.zentity.ModelsAction;
+import org.opensearch.plugin.zentity.SetupAction;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

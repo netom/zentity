@@ -30,13 +30,13 @@ import io.zentity.resolution.input.Input;
 import io.zentity.resolution.input.value.Value;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.node.NodeClient;
-import org.elasticsearch.common.Strings;
-import org.elasticsearch.common.xcontent.*;
-import org.elasticsearch.index.IndexNotFoundException;
+import org.opensearch.OpenSearchException;
+import org.opensearch.action.ActionListener;
+import org.opensearch.action.search.SearchResponse;
+import org.opensearch.client.node.NodeClient;
+import org.opensearch.common.Strings;
+import org.opensearch.common.xcontent.*;
+import org.opensearch.index.IndexNotFoundException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -44,7 +44,7 @@ import java.io.StringWriter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
+import static org.opensearch.common.xcontent.XContentFactory.jsonBuilder;
 import static io.zentity.common.Patterns.COLON;
 
 public class Job {
@@ -132,8 +132,8 @@ public class Job {
      */
     public static String serializeException(Exception e, boolean includeErrorTrace) {
         List<String> errorParts = new ArrayList<>();
-        if (e instanceof ElasticsearchException || e instanceof XContentParseException)
-            errorParts.add("\"by\":\"elasticsearch\"");
+        if (e instanceof OpenSearchException || e instanceof XContentParseException)
+            errorParts.add("\"by\":\"opensearch\"");
         else
             errorParts.add("\"by\":\"zentity\"");
         errorParts.add("\"type\":" + Json.quoteString(e.getClass().getCanonicalName()) + "");
@@ -152,8 +152,8 @@ public class Job {
      *
      * @param input    The input of the resolution job.
      * @param _hop     The hop number in which the query was submitted.
-     * @param query    The query object that zentity used to communicate with Elasticsearch.
-     * @param response The response from Elasticsearch as a JSON-formatted string.
+     * @param query    The query object that zentity used to communicate with OpenSearch.
+     * @param response The response from OpenSearch as a JSON-formatted string.
      * @return JSON-formatted string of the logged query.
      * @throws JsonProcessingException
      */
@@ -694,19 +694,19 @@ public class Job {
     }
 
     /**
-     * This action processes the response of an Elasticsearch query and then continues the job traversal.
+     * This action processes the response of an OpenSearch query and then continues the job traversal.
      *
      * @param job           The resolution job.
-     * @param query         The query that was submitted to Elasticsearch.
-     * @param response      The response that Elasticsearch returned.
-     * @param responseError The error that Elasticsearch returned (if any, otherwise null).
+     * @param query         The query that was submitted to OpenSearch.
+     * @param response      The response that OpenSearch returned.
+     * @param responseError The error that OpenSearch returned (if any, otherwise null).
      * @param onComplete    The action to perform after the job completes.
      * @throws IOException
      * @throws ValidationException
      */
     private void onSearchComplete(Job job, Query query, SearchResponse response, Exception responseError, ActionListener<String> onComplete) throws IOException, ValidationException {
 
-        // Read response from Elasticsearch.
+        // Read response from OpenSearch.
         JsonNode responseData = null;
         if (response != null)
             responseData = Json.ORDERED_MAPPER.readTree(response.toString());
@@ -729,9 +729,9 @@ public class Job {
                     String cause = "{\"type\":\"parsing_exception\",\"reason\":\"" + e.getMessage() + "\",\"line\":" + e.getLineNumber() + ",\"col\":" + e.getColumnNumber() + "}";
                     responseString = "{\"error\":{\"root_cause\":[" + cause + "],\"type\":\"parsing_exception\",\"reason\":\"" + e.getMessage() + "\",\"line\":" + e.getLineNumber() + ",\"col\":" + e.getColumnNumber() + "},\"status\":400}";
                 } else  {
-                    ElasticsearchException e = (ElasticsearchException) responseError;
+                    OpenSearchException e = (OpenSearchException) responseError;
                     String cause = Strings.toString(e.toXContent(jsonBuilder().startObject(), ToXContent.EMPTY_PARAMS).endObject());
-                    responseString = "{\"error\":{\"root_cause\":[" + cause + "],\"type\":\"" + ElasticsearchException.getExceptionName(e) + "\",\"reason\":\"" + e.getMessage() + "\"},\"status\":" + e.status().getStatus() + "}";
+                    responseString = "{\"error\":{\"root_cause\":[" + cause + "],\"type\":\"" + OpenSearchException.getExceptionName(e) + "\",\"reason\":\"" + e.getMessage() + "\"},\"status\":" + e.status().getStatus() + "}";
                 }
             }
             String logged = serializeLoggedQuery(job.input(), job.hop(), query, responseString);
@@ -1116,18 +1116,18 @@ public class Job {
             // The search queue for this hop has items. Perform the next search and then recurse.
             Query query = job.hopQueue().remove(0);
 
-            // Submit the query to Elasticsearch.
+            // Submit the query to OpenSearch.
             query.request().execute(new ActionListener<>() {
 
                 @Override
                 public void onResponse(SearchResponse response) {
                     try {
 
-                        // Process the response from Elasticsearch.
+                        // Process the response from OpenSearch.
                         job.onSearchComplete(job, query, response, null, onComplete);
                     } catch (Exception e) {
 
-                        // An error occurred when processing the response from Elasticsearch.
+                        // An error occurred when processing the response from OpenSearch.
                         onComplete.onFailure(e);
                     }
                 }
@@ -1136,7 +1136,7 @@ public class Job {
                 public void onFailure(Exception e) {
                     try {
 
-                        // Elasticsearch returned an error.
+                        // OpenSearch returned an error.
                         Exception responseError;
                         if (e.getClass() == IndexNotFoundException.class) {
 
@@ -1150,11 +1150,11 @@ public class Job {
                             responseError = e;
                         }
 
-                        // Process the response from Elasticsearch.
+                        // Process the response from OpenSearch.
                         job.onSearchComplete(job, query, null, responseError, onComplete);
                     } catch (Exception ee) {
 
-                        // An error occurred when processing the response from Elasticsearch.
+                        // An error occurred when processing the response from OpenSearch.
                         onComplete.onFailure(ee);
                     }
                 }

@@ -18,11 +18,11 @@
 package io.zentity.common;
 
 
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.support.GroupedActionListener;
-import org.elasticsearch.common.collect.Tuple;
-import org.elasticsearch.common.util.concurrent.AtomicArray;
-import org.elasticsearch.common.util.concurrent.CountDown;
+import org.opensearch.action.ActionListener;
+import org.opensearch.action.support.GroupedActionListener;
+import org.opensearch.common.collect.Tuple;
+import org.opensearch.common.util.concurrent.AtomicArray;
+import org.opensearch.common.util.concurrent.CountDown;
 
 import java.util.Collection;
 import java.util.Collections;

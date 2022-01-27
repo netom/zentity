@@ -2,7 +2,7 @@
 
 # zentity
 
-zentity is an **[Elasticsearch](https://www.elastic.co/products/elasticsearch)** plugin for entity resolution.
+zentity is an **[OpenSearch](https://opensearch.org/)** plugin for entity resolution.
 
 zentity aims to be:
 
@@ -27,11 +27,11 @@ Once you have installed Elasticsearch, you can install zentity from a remote URL
 
 1. Browse the [releases](https://zentity.io/releases).
 2. Find a release that matches your version of Elasticsearch. Copy the name of the .zip file.
-3. Install the plugin using the `elasticsearch-plugin` script that comes with Elasticsearch.
+3. Install the plugin using the `opensearch-plugin` script that comes with Elasticsearch.
 
 Example:
 
-`elasticsearch-plugin install https://zentity.io/releases/zentity-1.8.1-elasticsearch-7.11.2.zip`
+`opensearch-plugin install https://zentity.io/releases/zentity-1.8.1-opensearch-1.2.4.zip`
 
 Read the [installation](https://zentity.io/docs/installation) docs for more details.
 

@@ -15,24 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.elasticsearch.plugin.zentity;
+package org.opensearch.plugin.zentity;
 
 import io.zentity.common.Json;
 import io.zentity.model.ValidationException;
 import org.apache.logging.log4j.Logger;
-import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.ElasticsearchSecurityException;
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.cluster.metadata.IndexNameExpressionResolver;
-import org.elasticsearch.cluster.node.DiscoveryNodes;
-import org.elasticsearch.common.settings.ClusterSettings;
-import org.elasticsearch.common.settings.IndexScopedSettings;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.settings.SettingsFilter;
-import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.plugins.ActionPlugin;
-import org.elasticsearch.plugins.Plugin;
-import org.elasticsearch.rest.*;
+import org.opensearch.OpenSearchException;
+import org.opensearch.OpenSearchSecurityException;
+import org.opensearch.OpenSearchStatusException;
+import org.opensearch.cluster.metadata.IndexNameExpressionResolver;
+import org.opensearch.cluster.node.DiscoveryNodes;
+import org.opensearch.common.settings.ClusterSettings;
+import org.opensearch.common.settings.IndexScopedSettings;
+import org.opensearch.common.settings.Settings;
+import org.opensearch.common.settings.SettingsFilter;
+import org.opensearch.common.xcontent.XContentBuilder;
+import org.opensearch.plugins.ActionPlugin;
+import org.opensearch.plugins.Plugin;
+import org.opensearch.rest.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,13 +53,13 @@ class NotImplementedException extends Exception {
     }
 }
 
-class ForbiddenException extends ElasticsearchSecurityException {
+class ForbiddenException extends OpenSearchSecurityException {
     public ForbiddenException(String message) {
         super(message);
     }
 }
 
-class BadRequestException extends ElasticsearchStatusException {
+class BadRequestException extends OpenSearchStatusException {
     public BadRequestException(String message) {
         this(message, null);
     }
@@ -111,7 +111,7 @@ public class ZentityPlugin extends Plugin implements ActionPlugin {
 
     /**
      * Return an error response through a RestChannel.
-     * This method is used by the action classes in org.elasticsearch.plugin.zentity.
+     * This method is used by the action classes in org.opensearch.plugin.zentity.
      *
      * @param channel The REST channel to return the response through.
      * @param e       The exception object to process and return.
@@ -128,9 +128,9 @@ public class ZentityPlugin extends Plugin implements ActionPlugin {
                 channel.sendResponse(new BytesRestResponse(channel, RestStatus.NOT_FOUND, e));
             } else if (e instanceof NotImplementedException) {
                 channel.sendResponse(new BytesRestResponse(channel, RestStatus.NOT_IMPLEMENTED, e));
-            } else if (e instanceof ElasticsearchException) {
-                // Any other ElasticsearchException which has its own status code.
-                channel.sendResponse(new BytesRestResponse(channel, ((ElasticsearchException) e).status(), e));
+            } else if (e instanceof OpenSearchException) {
+                // Any other OpenSearchException which has its own status code.
+                channel.sendResponse(new BytesRestResponse(channel, ((OpenSearchException) e).status(), e));
             } else {
                 // Log the stack trace for unexpected types of errors.
                 logger.catching(e);
@@ -149,7 +149,7 @@ public class ZentityPlugin extends Plugin implements ActionPlugin {
 
     /**
      * Return a response through a RestChannel.
-     * This method is used by the action classes in org.elasticsearch.plugin.zentity.
+     * This method is used by the action classes in org.opensearch.plugin.zentity.
      *
      * @param channel The REST channel to return the response through.
      * @param content The content to process and return.
@@ -160,7 +160,7 @@ public class ZentityPlugin extends Plugin implements ActionPlugin {
 
     /**
      * Return a response through a RestChannel.
-     * This method is used by the action classes in org.elasticsearch.plugin.zentity.
+     * This method is used by the action classes in org.opensearch.plugin.zentity.
      *
      * @param channel The REST channel to return the response through.
      * @param content The content to process and return.
@@ -171,7 +171,7 @@ public class ZentityPlugin extends Plugin implements ActionPlugin {
 
     /**
      * Return a response through a RestChannel.
-     * This method is used by the action classes in org.elasticsearch.plugin.zentity.
+     * This method is used by the action classes in org.opensearch.plugin.zentity.
      *
      * @param channel The REST channel to return the response through.
      * @param json    The JSON string to process and return.
@@ -182,7 +182,7 @@ public class ZentityPlugin extends Plugin implements ActionPlugin {
 
     /**
      * Return a response through a RestChannel.
-     * This method is used by the action classes in org.elasticsearch.plugin.zentity.
+     * This method is used by the action classes in org.opensearch.plugin.zentity.
      *
      * @param channel The REST channel to return the response through.
      * @param json    The JSON string to process and return.

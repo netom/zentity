@@ -15,28 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.elasticsearch.plugin.zentity;
+package org.opensearch.plugin.zentity;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.elasticsearch.ElasticsearchSecurityException;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
-import org.elasticsearch.client.node.NodeClient;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.rest.BaseRestHandler;
-import org.elasticsearch.rest.BytesRestResponse;
-import org.elasticsearch.rest.RestRequest;
-import org.elasticsearch.rest.RestStatus;
+import org.opensearch.OpenSearchSecurityException;
+import org.opensearch.action.ActionListener;
+import org.opensearch.action.admin.indices.create.CreateIndexResponse;
+import org.opensearch.client.node.NodeClient;
+import org.opensearch.common.settings.Settings;
+import org.opensearch.common.xcontent.XContentBuilder;
+import org.opensearch.common.xcontent.XContentFactory;
+import org.opensearch.common.xcontent.XContentType;
+import org.opensearch.rest.BaseRestHandler;
+import org.opensearch.rest.BytesRestResponse;
+import org.opensearch.rest.RestRequest;
+import org.opensearch.rest.RestStatus;
 
 import java.util.List;
 import java.util.Properties;
 
-import static org.elasticsearch.rest.RestRequest.Method;
-import static org.elasticsearch.rest.RestRequest.Method.POST;
+import static org.opensearch.rest.RestRequest.Method;
+import static org.opensearch.rest.RestRequest.Method.POST;
 
 public class SetupAction extends BaseRestHandler {
 
@@ -79,16 +79,16 @@ public class SetupAction extends BaseRestHandler {
     /**
      * Create the .zentity-models index.
      *
-     * @param client           The client that will communicate with Elasticsearch.
+     * @param client           The client that will communicate with OpenSearch.
      * @param numberOfShards   The value of index.number_of_shards.
      * @param numberOfReplicas The value of index.number_of_replicas.
      * @param onComplete       Action to perform after index creation request completes.
      * @return
      */
     public static void createIndex(NodeClient client, int numberOfShards, int numberOfReplicas, ActionListener<CreateIndexResponse> onComplete) {
-        // Elasticsearch 7.0.0+ removes mapping types
+        // OpenSearch 7.0.0+ removes mapping types
         Properties props = ZentityPlugin.properties();
-        if (props.getProperty("elasticsearch.version").compareTo("7.") >= 0) {
+        if (props.getProperty("opensearch.version").compareTo("7.") >= 0) {
             client.admin().indices().prepareCreate(ModelsAction.INDEX_NAME)
                 .setSettings(Settings.builder()
                         .put("index.number_of_shards", numberOfShards)
@@ -110,7 +110,7 @@ public class SetupAction extends BaseRestHandler {
     /**
      * Create the .zentity-models index using the default settings.
      *
-     * @param client     The client that will communicate with Elasticsearch.
+     * @param client     The client that will communicate with OpenSearch.
      * @param onComplete The action to perform after the index creation request completes.
      */
     public static void createIndex(NodeClient client, ActionListener<CreateIndexResponse> onComplete) {
@@ -157,10 +157,10 @@ public class SetupAction extends BaseRestHandler {
                         public void onFailure(Exception e) {
 
                             // An error occurred when creating the .zentity-models index.
-                            if (e.getClass() == ElasticsearchSecurityException.class) {
+                            if (e.getClass() == OpenSearchSecurityException.class) {
 
                                 // The error was a security exception.
-                                // Log the error message as it was received from Elasticsearch.
+                                // Log the error message as it was received from OpenSearch.
                                 logger.debug(e.getMessage());
 
                                 // Return a more descriptive error message for the user.

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.elasticsearch.plugin.zentity;
+package org.opensearch.plugin.zentity;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,9 +29,11 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.nio.entity.NStringEntity;
-import org.elasticsearch.client.Request;
-import org.elasticsearch.client.Response;
-import org.elasticsearch.client.ResponseException;
+import org.opensearch.client.Request;
+import org.opensearch.client.Response;
+import org.opensearch.client.ResponseException;
+import org.opensearch.plugin.zentity.ModelsAction;
+import org.opensearch.plugin.zentity.ZentityPlugin;
 import org.junit.*;
 
 import java.io.IOException;
@@ -589,12 +591,12 @@ public class ResolutionActionIT extends AbstractIT {
         client().performRequest(postModelObjectArrays);
     }
 
-    public static void prepareTestEntityModelElasticsearchError() throws Exception {
-        ByteArrayEntity testEntityModelElasticsearchError;
-        testEntityModelElasticsearchError = new ByteArrayEntity(readFile("TestEntityModelElasticsearchError.json"), ContentType.APPLICATION_JSON);
-        Request postModelElasticsearchError = new Request("POST", "_zentity/models/zentity_test_entity_elasticsearch_error");
-        postModelElasticsearchError.setEntity(testEntityModelElasticsearchError);
-        client().performRequest(postModelElasticsearchError);
+    public static void prepareTestEntityModelOpenSearchError() throws Exception {
+        ByteArrayEntity testEntityModelOpenSearchError;
+        testEntityModelOpenSearchError = new ByteArrayEntity(readFile("TestEntityModelOpenSearchError.json"), ContentType.APPLICATION_JSON);
+        Request postModelOpenSearchError = new Request("POST", "_zentity/models/zentity_test_entity_opensearch_error");
+        postModelOpenSearchError.setEntity(testEntityModelOpenSearchError);
+        client().performRequest(postModelOpenSearchError);
     }
 
     public static void prepareTestEntityModelZentityError() throws Exception {
@@ -658,7 +660,7 @@ public class ResolutionActionIT extends AbstractIT {
         prepareTestEntityModelB();
         prepareTestEntityModelArrays();
         prepareTestEntityModelObjectArrays();
-        prepareTestEntityModelElasticsearchError();
+        prepareTestEntityModelOpenSearchError();
         prepareTestEntityModelZentityError();
     }
 
@@ -1397,8 +1399,8 @@ public class ResolutionActionIT extends AbstractIT {
     }
 
     @Test
-    public void testJobElasticsearchError() throws Exception {
-        String endpoint = "_zentity/resolution/zentity_test_entity_elasticsearch_error";
+    public void testJobOpenSearchError() throws Exception {
+        String endpoint = "_zentity/resolution/zentity_test_entity_opensearch_error";
         Request postResolution = new Request("POST", endpoint);
         postResolution.setEntity(TEST_PAYLOAD_JOB_ERROR);
         try {
@@ -1407,8 +1409,8 @@ public class ResolutionActionIT extends AbstractIT {
             Response response = e.getResponse();
             assertEquals(response.getStatusLine().getStatusCode(), 500);
             JsonNode json = Json.MAPPER.readTree(response.getEntity().getContent());
-            assertEquals(json.get("error").get("by").asText(), "elasticsearch");
-            assertEquals(json.get("error").get("type").asText(), "org.elasticsearch.common.xcontent.XContentParseException");
+            assertEquals(json.get("error").get("by").asText(), "opensearch");
+            assertEquals(json.get("error").get("type").asText(), "org.opensearch.common.xcontent.XContentParseException");
             assertEquals(json.get("error").get("reason").asText(), "[1:967] [bool] failed to parse field [filter]");
             assertTrue(json.get("error").get("stack_trace").asText().contains("unknown field [example_malformed_query]"));
             assertEquals(json.get("hits").get("total").asInt(), 2);
@@ -1419,7 +1421,7 @@ public class ResolutionActionIT extends AbstractIT {
         }
 
         // Test error_trace=false and queries=true
-        String endpointQueriesNoTrace = "_zentity/resolution/zentity_test_entity_elasticsearch_error";
+        String endpointQueriesNoTrace = "_zentity/resolution/zentity_test_entity_opensearch_error";
         Request postResolutionQueriesNoTrace = new Request("POST", endpointQueriesNoTrace);
         postResolutionQueriesNoTrace.addParameter("error_trace", "false");
         postResolutionQueriesNoTrace.addParameter("queries", "true");
@@ -1430,8 +1432,8 @@ public class ResolutionActionIT extends AbstractIT {
             Response response = e.getResponse();
             assertEquals(response.getStatusLine().getStatusCode(), 500);
             JsonNode json = Json.MAPPER.readTree(response.getEntity().getContent());
-            assertEquals(json.get("error").get("by").asText(), "elasticsearch");
-            assertEquals(json.get("error").get("type").asText(), "org.elasticsearch.common.xcontent.XContentParseException");
+            assertEquals(json.get("error").get("by").asText(), "opensearch");
+            assertEquals(json.get("error").get("type").asText(), "org.opensearch.common.xcontent.XContentParseException");
             assertNull(json.get("error").get("stack_trace"));
             assertFalse(json.get("queries").isMissingNode());
             assertEquals(json.get("hits").get("total").asInt(), 2);
@@ -1957,7 +1959,7 @@ public class ResolutionActionIT extends AbstractIT {
         assertFalse(firstTermHit.has("_explanation"));
 
         JsonNode explanationResult = items.get(1);
-        assertEquals("org.elasticsearch.plugin.zentity.NotFoundException", explanationResult.get("error").get("type").asText());
+        assertEquals("org.opensearch.plugin.zentity.NotFoundException", explanationResult.get("error").get("type").asText());
     }
 
     @Test(expected = ResponseException.class)

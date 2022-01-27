@@ -15,12 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.elasticsearch.plugin.zentity;
+package org.opensearch.plugin.zentity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.zentity.common.Json;
-import org.elasticsearch.client.Request;
-import org.elasticsearch.client.Response;
+import org.opensearch.client.Request;
+import org.opensearch.client.Response;
+import org.opensearch.plugin.zentity.ZentityPlugin;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -51,7 +52,7 @@ public class HomeActionIT extends AbstractIT {
         assertEquals(json.get("description").asText(), props.getProperty("description"));
         assertEquals(json.get("website").asText(), props.getProperty("zentity.website"));
         assertEquals(json.get("version").get("zentity").asText(), props.getProperty("zentity.version"));
-        assertEquals(json.get("version").get("elasticsearch").asText(), props.getProperty("elasticsearch.version"));
+        assertEquals(json.get("version").get("opensearch").asText(), props.getProperty("opensearch.version"));
     }
 
 }

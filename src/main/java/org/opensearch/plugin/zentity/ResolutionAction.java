@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.elasticsearch.plugin.zentity;
+package org.opensearch.plugin.zentity;
 
 import io.zentity.common.AsyncCollectionRunner;
 import io.zentity.common.Json;
@@ -25,13 +25,13 @@ import io.zentity.resolution.Job;
 import io.zentity.resolution.input.Input;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.client.node.NodeClient;
-import org.elasticsearch.common.collect.Tuple;
-import org.elasticsearch.rest.BaseRestHandler;
-import org.elasticsearch.rest.BytesRestResponse;
-import org.elasticsearch.rest.RestRequest;
-import org.elasticsearch.rest.RestStatus;
+import org.opensearch.action.ActionListener;
+import org.opensearch.client.node.NodeClient;
+import org.opensearch.common.collect.Tuple;
+import org.opensearch.rest.BaseRestHandler;
+import org.opensearch.rest.BytesRestResponse;
+import org.opensearch.rest.RestRequest;
+import org.opensearch.rest.RestStatus;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -43,7 +43,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyMap;
-import static org.elasticsearch.rest.RestRequest.Method.POST;
+import static org.opensearch.rest.RestRequest.Method.POST;
 
 public class ResolutionAction extends BaseRestHandler {
 

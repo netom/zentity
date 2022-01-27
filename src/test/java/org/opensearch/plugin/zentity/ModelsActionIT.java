@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.elasticsearch.plugin.zentity;
+package org.opensearch.plugin.zentity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -27,9 +27,10 @@ import org.apache.http.Consts;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.nio.entity.NStringEntity;
-import org.elasticsearch.client.Request;
-import org.elasticsearch.client.Response;
-import org.elasticsearch.client.ResponseException;
+import org.opensearch.client.Request;
+import org.opensearch.client.Response;
+import org.opensearch.client.ResponseException;
+import org.opensearch.plugin.zentity.ModelsAction;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -428,7 +429,7 @@ public class ModelsActionIT extends AbstractIT {
                     assertFalse(result.has("error"));
                 } else {
                     assertTrue(result.has("error"));
-                    assertEquals("org.elasticsearch.index.engine.VersionConflictEngineException", result.get("error").get("type").asText());
+                    assertEquals("org.opensearch.index.engine.VersionConflictEngineException", result.get("error").get("type").asText());
                 }
 
                 // ensure the entity model is properly reflected in the '.zentity-models' index

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.elasticsearch.plugin.zentity;
+package org.opensearch.plugin.zentity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.zentity.common.AsyncCollectionRunner;
@@ -25,27 +25,27 @@ import io.zentity.model.ValidationException;
 import io.zentity.resolution.Job;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.elasticsearch.ElasticsearchSecurityException;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.ActionResponse;
-import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
-import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
-import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
-import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.client.node.NodeClient;
-import org.elasticsearch.common.Strings;
-import org.elasticsearch.common.collect.Tuple;
-import org.elasticsearch.common.xcontent.ToXContent;
-import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.IndexNotFoundException;
-import org.elasticsearch.rest.BaseRestHandler;
-import org.elasticsearch.rest.RestRequest;
+import org.opensearch.OpenSearchSecurityException;
+import org.opensearch.action.ActionListener;
+import org.opensearch.action.ActionResponse;
+import org.opensearch.action.admin.indices.create.CreateIndexResponse;
+import org.opensearch.action.admin.indices.exists.indices.IndicesExistsResponse;
+import org.opensearch.action.admin.indices.refresh.RefreshRequest;
+import org.opensearch.action.delete.DeleteResponse;
+import org.opensearch.action.get.GetResponse;
+import org.opensearch.action.index.IndexResponse;
+import org.opensearch.action.search.SearchResponse;
+import org.opensearch.action.support.WriteRequest;
+import org.opensearch.client.node.NodeClient;
+import org.opensearch.common.Strings;
+import org.opensearch.common.collect.Tuple;
+import org.opensearch.common.xcontent.ToXContent;
+import org.opensearch.common.xcontent.XContentBuilder;
+import org.opensearch.common.xcontent.XContentFactory;
+import org.opensearch.common.xcontent.XContentType;
+import org.opensearch.index.IndexNotFoundException;
+import org.opensearch.rest.BaseRestHandler;
+import org.opensearch.rest.RestRequest;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -58,11 +58,11 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyMap;
-import static org.elasticsearch.rest.RestRequest.Method;
-import static org.elasticsearch.rest.RestRequest.Method.DELETE;
-import static org.elasticsearch.rest.RestRequest.Method.GET;
-import static org.elasticsearch.rest.RestRequest.Method.POST;
-import static org.elasticsearch.rest.RestRequest.Method.PUT;
+import static org.opensearch.rest.RestRequest.Method;
+import static org.opensearch.rest.RestRequest.Method.DELETE;
+import static org.opensearch.rest.RestRequest.Method.GET;
+import static org.opensearch.rest.RestRequest.Method.POST;
+import static org.opensearch.rest.RestRequest.Method.PUT;
 
 public class ModelsAction extends BaseRestHandler {
 
@@ -104,7 +104,7 @@ public class ModelsAction extends BaseRestHandler {
     /**
      * Create the .zentity-models index.
      *
-     * @param client     The client that will communicate with Elasticsearch.
+     * @param client     The client that will communicate with OpenSearch.
      * @param onComplete The action to perform after the index creation request completes.
      */
     public static void createIndex(NodeClient client, ActionListener<ActionResponse> onComplete) {
@@ -127,10 +127,10 @@ public class ModelsAction extends BaseRestHandler {
             public void onFailure(Exception e) {
 
                 // An error occurred when creating the index.
-                if (e instanceof ElasticsearchSecurityException) {
+                if (e instanceof OpenSearchSecurityException) {
 
                     // The error was a security exception.
-                    // Log the error message as it was received from Elasticsearch.
+                    // Log the error message as it was received from OpenSearch.
                     logger.debug(e.getMessage());
 
                     // Return a more descriptive error message for the user.
@@ -147,7 +147,7 @@ public class ModelsAction extends BaseRestHandler {
     /**
      * Check if the .zentity-models index exists, and if it doesn't, then create it.
      *
-     * @param client     The client that will communicate with Elasticsearch.
+     * @param client     The client that will communicate with OpenSearch.
      * @param onComplete The action to perform after the index creation request completes.
      */
     public static void ensureIndex(NodeClient client, ActionListener<ActionResponse> onComplete) {
@@ -187,10 +187,10 @@ public class ModelsAction extends BaseRestHandler {
             public void onFailure(Exception e) {
 
                 // An error occurred when checking if the index exists.
-                if (e instanceof ElasticsearchSecurityException) {
+                if (e instanceof OpenSearchSecurityException) {
 
                     // The error was a security exception.
-                    // Log the error message as it was received from Elasticsearch.
+                    // Log the error message as it was received from OpenSearch.
                     logger.debug(e.getMessage());
 
                     // Return a more descriptive error message for the user.
@@ -207,7 +207,7 @@ public class ModelsAction extends BaseRestHandler {
     /**
      * Retrieve all entity models.
      *
-     * @param client     The client that will communicate with Elasticsearch.
+     * @param client     The client that will communicate with OpenSearch.
      * @param onComplete The action to perform after the search request completes.
      */
     public static void getEntityModels(NodeClient client, ActionListener<SearchResponse> onComplete) {
@@ -229,7 +229,7 @@ public class ModelsAction extends BaseRestHandler {
                 if (e instanceof IndexNotFoundException) {
 
                     // The .zentity-models index does not exist.
-                    // Log the error message as it was received from Elasticsearch.
+                    // Log the error message as it was received from OpenSearch.
                     logger.debug(e.getMessage());
 
                     // Attempt to create the .zentity-models index.
@@ -251,10 +251,10 @@ public class ModelsAction extends BaseRestHandler {
                         }
                     });
 
-                } else if (e.getClass() == ElasticsearchSecurityException.class) {
+                } else if (e.getClass() == OpenSearchSecurityException.class) {
 
                     // The error was a security exception.
-                    // Log the error message as it was received from Elasticsearch.
+                    // Log the error message as it was received from OpenSearch.
                     logger.debug(e.getMessage());
 
                     // Return a more descriptive error message for the user.
@@ -273,7 +273,7 @@ public class ModelsAction extends BaseRestHandler {
      * Retrieve one entity model by its type.
      *
      * @param entityType The entity type.
-     * @param client     The client that will communicate with Elasticsearch.
+     * @param client     The client that will communicate with OpenSearch.
      * @param onComplete The action to perform after the get request completes.
      */
     public static void getEntityModel(String entityType, NodeClient client, ActionListener<GetResponse> onComplete) {
@@ -295,7 +295,7 @@ public class ModelsAction extends BaseRestHandler {
                 if (e instanceof IndexNotFoundException) {
 
                     // The .zentity-models index does not exist.
-                    // Log the error message as it was received from Elasticsearch.
+                    // Log the error message as it was received from OpenSearch.
                     logger.debug(e.getMessage());
 
                     // Attempt to create the .zentity-models index.
@@ -317,10 +317,10 @@ public class ModelsAction extends BaseRestHandler {
                         }
                     });
 
-                } else if (e.getClass() == ElasticsearchSecurityException.class) {
+                } else if (e.getClass() == OpenSearchSecurityException.class) {
 
                     // The error was a security exception.
-                    // Log the error message as it was received from Elasticsearch.
+                    // Log the error message as it was received from OpenSearch.
                     logger.debug(e.getMessage());
 
                     // Return a more descriptive error message for the user.
@@ -340,7 +340,7 @@ public class ModelsAction extends BaseRestHandler {
      *
      * @param entityType        The entity type.
      * @param requestBody       The request body.
-     * @param client            The client that will communicate with Elasticsearch.
+     * @param client            The client that will communicate with OpenSearch.
      * @param isBulkRequest     Whether this request is part of a bulk request. If false, ensure that the
      *                          '.zentity-models' index exists before running the operation, and wait for the index
      *                          to refresh after completing the operation. If true, skip both of these steps.
@@ -400,7 +400,7 @@ public class ModelsAction extends BaseRestHandler {
      *
      * @param entityType        The entity type.
      * @param requestBody       The request body.
-     * @param client            The client that will communicate with Elasticsearch.
+     * @param client            The client that will communicate with OpenSearch.
      * @param isBulkRequest     Whether this request is part of a bulk request. If false, ensure that the
      *                          '.zentity-models' index exists before running the operation, and wait for the index
      *                          to refresh after completing the operation. If true, skip both of these steps.
@@ -459,7 +459,7 @@ public class ModelsAction extends BaseRestHandler {
      * Delete one entity model by its type.
      *
      * @param entityType        The entity type.
-     * @param client            The client that will communicate with Elasticsearch.
+     * @param client            The client that will communicate with OpenSearch.
      * @param isBulkRequest     Whether this request is part of a bulk request. If false, ensure that the
      *                          '.zentity-models' index exists before running the operation, and wait for the index
      *                          to refresh after completing the operation. If true, skip both of these steps.
@@ -511,7 +511,7 @@ public class ModelsAction extends BaseRestHandler {
     /**
      * Run a single model management operation.
      *
-     * @param client            The client that will communicate with Elasticsearch.
+     * @param client            The client that will communicate with OpenSearch.
      * @param method            The HTTP method ("GET", "POST", "PUT", "DELETE").
      * @param body              The request body.
      * @param params            The URL parameters for the request. Overrides reqParams during bulk operations.
@@ -587,10 +587,10 @@ public class ModelsAction extends BaseRestHandler {
                         (Exception e) -> {
 
                             // An error occurred when indexing the entity model.
-                            if (e.getClass() == ElasticsearchSecurityException.class) {
+                            if (e.getClass() == OpenSearchSecurityException.class) {
 
                                 // The error was a security exception.
-                                // Log the error message as it was received from Elasticsearch.
+                                // Log the error message as it was received from OpenSearch.
                                 logger.debug(e.getMessage());
 
                                 // Return a more descriptive error message for the user.
@@ -621,10 +621,10 @@ public class ModelsAction extends BaseRestHandler {
                         (Exception e) -> {
 
                             // An error occurred when updating the entity model.
-                            if (e.getClass() == ElasticsearchSecurityException.class) {
+                            if (e.getClass() == OpenSearchSecurityException.class) {
 
                                 // The error was a security exception.
-                                // Log the error message as it was received from Elasticsearch.
+                                // Log the error message as it was received from OpenSearch.
                                 logger.debug(e.getMessage());
 
                                 // Return a more descriptive error message for the user.
@@ -655,10 +655,10 @@ public class ModelsAction extends BaseRestHandler {
                         (Exception e) -> {
 
                             // An error occurred when deleting the entity model.
-                            if (e.getClass() == ElasticsearchSecurityException.class) {
+                            if (e.getClass() == OpenSearchSecurityException.class) {
 
                                 // The error was a security exception.
-                                // Log the error message as it was received from Elasticsearch.
+                                // Log the error message as it was received from OpenSearch.
                                 logger.debug(e.getMessage());
 
                                 // Return a more descriptive error message for the user.

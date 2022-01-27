@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.elasticsearch.plugin.zentity;
+package org.opensearch.plugin.zentity;
 
-import org.elasticsearch.common.Booleans;
-import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.rest.RestRequest;
+import org.opensearch.common.Booleans;
+import org.opensearch.common.unit.TimeValue;
+import org.opensearch.rest.RestRequest;
 
 import java.util.Map;
 import java.util.Optional;
@@ -87,7 +87,7 @@ public class ParamsUtil {
 
     /**
      * Read many parameters from a {@link RestRequest} into a {@link Map}. It is necessary to read all possible params
-     * in a {@link org.elasticsearch.rest.BaseRestHandler BaseRestHandler's} prepare method to avoid throwing
+     * in a {@link org.opensearch.rest.BaseRestHandler BaseRestHandler's} prepare method to avoid throwing
      * a validation error.
      *
      * @param req A request.

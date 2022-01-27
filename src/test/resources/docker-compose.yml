@@ -1,12 +1,12 @@
 version: '3.7'
 services:
   es01:
-    image: "docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION}"
-    user: elasticsearch
+    image: "opensearchproject/opensearch:${OPENSEARCH_VERSION}"
+    user: opensearch
     command:
       - /bin/bash
       - -c
-      - "elasticsearch-plugin install --batch file:///releases/zentity-${ZENTITY_VERSION}-elasticsearch-${ELASTICSEARCH_VERSION}.zip && elasticsearch"
+      - "opensearch-plugin install --batch file:///releases/zentity-${ZENTITY_VERSION}-opensearch-${OPENSEARCH_VERSION}.zip && opensearch"
     environment:
       - node.name=es01
       - cluster.name=zentity-test-cluster
@@ -21,19 +21,19 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - data01:/usr/share/elasticsearch/data
+      - data01:/usr/share/opensearch/data
       - ${BUILD_DIRECTORY}/releases/:/releases
     ports:
       - 9400:9400
     networks:
-      - elastic
+      - opensearch
   es02:
-    image: "docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION}"
-    user: elasticsearch
+    image: "opensearchproject/opensearch:${OPENSEARCH_VERSION}"
+    user: opensearch
     command:
       - /bin/bash
       - -c
-      - "elasticsearch-plugin install --batch file:///releases/zentity-${ZENTITY_VERSION}-elasticsearch-${ELASTICSEARCH_VERSION}.zip && elasticsearch"
+      - "opensearch-plugin install --batch file:///releases/zentity-${ZENTITY_VERSION}-opensearch-${OPENSEARCH_VERSION}.zip && opensearch"
     environment:
       - node.name=es02
       - cluster.name=zentity-test-cluster
@@ -48,17 +48,17 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - data02:/usr/share/elasticsearch/data
+      - data02:/usr/share/opensearch/data
       - ${BUILD_DIRECTORY}/releases/:/releases
     networks:
-      - elastic
+      - opensearch
   es03:
-    image: "docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION}"
-    user: elasticsearch
+    image: "opensearchproject/opensearch:${OPENSEARCH_VERSION}"
+    user: opensearch
     command:
       - /bin/bash
       - -c
-      - "elasticsearch-plugin install --batch file:///releases/zentity-${ZENTITY_VERSION}-elasticsearch-${ELASTICSEARCH_VERSION}.zip && elasticsearch"
+      - "opensearch-plugin install --batch file:///releases/zentity-${ZENTITY_VERSION}-opensearch-${OPENSEARCH_VERSION}.zip && opensearch"
     environment:
       - node.name=es03
       - cluster.name=zentity-test-cluster
@@ -73,10 +73,10 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - data03:/usr/share/elasticsearch/data
+      - data03:/usr/share/opensearch/data
       - ${BUILD_DIRECTORY}/releases/:/releases
     networks:
-      - elastic
+      - opensearch
 
 volumes:
   data01:
@@ -87,5 +87,5 @@ volumes:
     driver: local
 
 networks:
-  elastic:
+  opensearch:
     driver: bridge
